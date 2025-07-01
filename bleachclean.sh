@@ -1,14 +1,15 @@
 #!/bin/bash
-# 42BleachClean - The Ultimate Hybrid Cleaner for 42/1337 Students
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
+
+# 42BleachClean - Hybrid Cleaner for 42/1337 Students
 # Author: Youssef Mazini
 # LinkedIn: https://www.linkedin.com/in/youssef-mazini/
 # GitHub: https://github.com/yomazini/42BleachClean
-# Compatible with both Linux (Ubuntu/derivatives) and macOS
+# Compatible with both Linux and macOS
 
-  
-# Animation and progress functions
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
-# Color definitions for better UI
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -21,7 +22,7 @@ DIM='\033[2m'
 RESET='\033[0m'
 BLINK='\033[5m'
 
-# Animation and progress functions
+
 spinner() {
     local pid=$1
     local delay=0.1
@@ -54,7 +55,6 @@ progress_bar() {
     echo
 }
 
-# Animated banner function
 animate_banner_line() {
     local line="$1"
     local delay=0.000002
@@ -65,7 +65,9 @@ animate_banner_line() {
     done
     echo
 } 
-# Detect OS function
+
+# OS detection
+
 detect_os() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
         echo "macOS"
@@ -76,13 +78,10 @@ detect_os() {
     fi
 }
 
-
-# Display awesome animated logo and header
 show_header() {
     clear
     echo -e "${PURPLE}${BOLD}"
     
-    # Animated banner with BLEACH CLEANER
     local banner_lines=(
         "████████████████████████████████████████████████████████████████████████"
         "██                                                                    ██"
@@ -103,26 +102,26 @@ show_header() {
         "████████████████████████████████████████████████████████████████████████"
     )
     
-    # Animate each line of the banner
     for line in "${banner_lines[@]}"; do
         animate_banner_line "$line"
     done
     
     echo -e "${RESET}"
     
-    # Add some sparkle effects
     echo -e "${YELLOW}✨${CYAN}${BOLD} The Ultimate System Cleaner ${YELLOW}✨${RESET}"
     echo -e "${DIM}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
     echo
     
-    # Detect and display OS
+    # //TODO: Detect and display OS for user validtion 
     OS=$(detect_os)
     echo -e "${WHITE}👋 Hello ${BOLD}${YELLOW}$USER${RESET}${WHITE}! Welcome to BLEACH CLEANER${RESET}"
     echo -e "${BLUE}🖥️  Operating System: ${BOLD}$OS${RESET}"
     echo
     
-    # Show current disk usage
-    if [[ "$OS" == "macOS" ]]; then
+    # Show curr disk usage
+	# curl -L https://github.com/Canop/dysk/releases/download/v2.10.1/dysk_2.10.1.zip 
+    
+	if [[ "$OS" == "macOS" ]]; then
         disk_info=$(df -h "$HOME" | tail -1)
         total=$(echo $disk_info | awk '{print $2}')
         used=$(echo $disk_info | awk '{print $3}')
@@ -147,7 +146,6 @@ show_header() {
     echo
 }
 
-# Help function with emojis and examples
 show_help() {
     echo -e "${CYAN}${BOLD}📖 42BleachClean Help & Usage Guide${RESET}"
     echo
@@ -182,7 +180,6 @@ show_help() {
     echo
 }
 
-# Update function
 update_script() {
     echo -e "${YELLOW}🔄 Checking for updates...${RESET}"
     
@@ -207,7 +204,6 @@ update_script() {
     exit 0
 }
 
-# Calculate directory size
 get_dir_size() {
     local dir="$1"
     if [[ -d "$dir" ]]; then
@@ -221,7 +217,6 @@ get_dir_size() {
     fi
 }
 
-# Clean function with progress and better UX
 clean_system() {
     local total_saved=0
     local preview_mode=${1:-false}
@@ -229,60 +224,61 @@ clean_system() {
     echo -e "${CYAN}🧹 ${BOLD}Starting System Cleanup...${RESET}"
     echo
     
-    # Determine cleaning targets based on OS
     declare -a clean_targets_macos=(
+        "$HOME/Library/Application Support/BraveSoftware/Brave-Browser/Crashpad/completed/*"
+        "$HOME/Library/Application Support/Spotify/PersistentCache/*"
+        "$HOME/Library/Application Support/Chromium/*/File System"
         "$HOME/Library/*.42*"
-        "$HOME/*.42*"
+        "$HOME/Library/Application Support/Google/Chrome/*/File System"
+        "$HOME/Library/Application Support/discord/Cache/*"
+        "$HOME/Library/Application Support/Code/CachedData/*"
+        "$HOME/Library/Application Support/discord/Code Cache/js*"
         "$HOME/.zcompdump*"
-        "$HOME/.cocoapods.42_cache_bak*"
+        "$HOME/Library/Application Support/BraveSoftware/Brave-Browser/*/File System"
         "$HOME/.Trash/*"
         "$HOME/Library/Caches/*"
+        "$HOME/Library/Application Support/Code/User/workspaceStorage/*"
+        "$HOME/*.42*"
+        "$HOME/Library/Application Support/discord/Crashpad/completed/*"
+        "$HOME/Library/Application Support/Code/Cache/*"
+        "$HOME/Desktop/**/*/.DS_Store"
+        "$HOME/Library/Application Support/Code/Crashpad/completed/*"
+        "$HOME/Library/Application Support/Google/Chrome/*/Service Worker/CacheStorage/*"
+        "$HOME/Library/Application Support/Google/Chrome/*/Application Cache/*"
         "$HOME/Library/Application Support/Caches/*"
         "$HOME/Library/Application Support/Slack/Service Worker/CacheStorage/*"
         "$HOME/Library/Application Support/Slack/Cache/*"
-        "$HOME/Library/Application Support/discord/Cache/*"
-        "$HOME/Library/Application Support/discord/Code Cache/js*"
-        "$HOME/Library/Application Support/discord/Crashpad/completed/*"
-        "$HOME/Library/Application Support/Code/Cache/*"
-        "$HOME/Library/Application Support/Code/CachedData/*"
-        "$HOME/Library/Application Support/Code/Crashpad/completed/*"
-        "$HOME/Library/Application Support/Code/User/workspaceStorage/*"
-        "$HOME/Library/Application Support/Google/Chrome/*/Service Worker/CacheStorage/*"
-        "$HOME/Library/Application Support/Google/Chrome/*/Application Cache/*"
+        "$HOME/.cocoapods.42_cache_bak*"
         "$HOME/Library/Application Support/Google/Chrome/Crashpad/completed/*"
         "$HOME/Library/Application Support/BraveSoftware/Brave-Browser/*/Service Worker/CacheStorage/*"
         "$HOME/Library/Application Support/BraveSoftware/Brave-Browser/*/Application Cache/*"
-        "$HOME/Library/Application Support/BraveSoftware/Brave-Browser/Crashpad/completed/*"
-        "$HOME/Library/Application Support/Spotify/PersistentCache/*"
-        "$HOME/Desktop/**/*/.DS_Store"
-        "$HOME/Library/Application Support/Chromium/*/File System"
-        "$HOME/Library/Application Support/Google/Chrome/*/File System"
-        "$HOME/Library/Application Support/BraveSoftware/Brave-Browser/*/File System"
     )
     
     declare -a clean_targets_linux=(
-        "$HOME/.var/app/com.google.Chrome/cache/*"
-        "$HOME/.npm/_cacache/*"
-        "$HOME/.bun/install/cache/*"
-        "$HOME/.var/app/com.google.Chrome/config/google-chrome/component_crx_cache/*"
-        "$HOME/.var/app/com.google.Chrome/config/google-chrome/extensions_crx_cache/*"
+        "$HOME/.var/app/com.discordapp.Discord/config/discord/Cache/*"
         "$HOME/.var/app/com.google.Chrome/config/google-chrome/*/Service Worker/ScriptCache/*"
-        "$HOME/.var/app/com.google.Chrome/config/google-chrome/*/File System/*"
         "$HOME/.var/app/com.google.Chrome/config/google-chrome/*/Service Worker/CacheStorage/*"
+        "$HOME/.var/app/org.mozilla.firefox/cache/*"
         "$HOME/.var/app/com.spotify.Client/cache/*"
-        "$HOME/.var/app/com.visualstudio.code/cache/*"
         "$HOME/.var/app/com.visualstudio.code/config/Code/Cache/*"
+        "$HOME/.var/app/*/cache/*"
         "$HOME/.var/app/com.visualstudio.code/config/Code/CachedData/*"
         "$HOME/.var/app/com.visualstudio.code/config/Code/CachedExtensionVSIXs/*"
-        "$HOME/.var/app/com.discordapp.Discord/config/discord/Cache/*"
-        "$HOME/.var/app/com.discordapp.Discord/cache/*"
-        "$HOME/.var/app/org.mozilla.firefox/cache/*"
-        "$HOME/.var/app/*/cache/*"
-        "$HOME/.local/share/Trash/*"
         "$HOME/.cache/*"
+		#"ymazini/.localshit/bin/shitty_devops_scripts/Cch/*"
+        "$HOME/.var/app/com.discordapp.Discord/cache/*"
+        "$HOME/.var/app/com.google.Chrome/config/google-chrome/*/File System/*"
+		 #"ymazini/.localshit/bin/serp/logs/*"
+        "$HOME/.bun/install/cache/*"
+        "$HOME/.var/app/com.google.Chrome/cache/*"
+        "$HOME/.npm/_cacache/*"	
+		 #"ymazini/.localshit/bin/iptv/logs/*"
+        "$HOME/.local/share/Trash/*"
+        "$HOME/.var/app/com.google.Chrome/config/google-chrome/extensions_crx_cache/*"
+        "$HOME/.var/app/com.google.Chrome/config/google-chrome/component_crx_cache/*"
+        "$HOME/.var/app/com.visualstudio.code/cache/*"
     )
     
-    # Select appropriate targets based on OS
     if [[ "$OS" == "macOS" ]]; then
         clean_targets=("${clean_targets_macos[@]}")
     else
@@ -295,7 +291,6 @@ clean_system() {
     for target in "${clean_targets[@]}"; do
         current_item=$((current_item + 1))
         
-        # Expand the glob pattern
         shopt -s nullglob
         expanded_paths=($target)
         shopt -u nullglob
@@ -308,7 +303,7 @@ clean_system() {
                     if [[ $size -gt 0 ]]; then
                         total_saved=$((total_saved + size))
                         
-                        # Convert size to human readable
+                        #  human readable
                         if [[ $size -lt 1024 ]]; then
                             size_display="${size}KB"
                         elif [[ $size -lt 1048576 ]]; then
@@ -328,7 +323,6 @@ clean_system() {
             done
         fi
         
-        # Progress indicator
         local progress=$((current_item * 100 / total_items))
         printf "\r${CYAN}Progress: [%-20s] %d%% (%d/%d)${RESET}" \
                "$(printf '#%.0s' $(seq 1 $((progress / 5))))" \
@@ -337,7 +331,6 @@ clean_system() {
     
     echo -e "\n"
     
-    # Convert total saved to human readable
     if [[ $total_saved -lt 1024 ]]; then
         saved_display="${total_saved}KB"
     elif [[ $total_saved -lt 1048576 ]]; then
@@ -355,30 +348,27 @@ clean_system() {
     echo "$total_saved"
 }
 
-# Find large files (>42MB) not accessed in the last week
 find_large_files() {
     echo -e "${PURPLE}🔍 Scanning for large files (>42MB) not used in the last week...${RESET}"
     echo
     
     local large_files=()
     
-    # Define search paths (excluding system and common directories)
     local search_paths=(
         "$HOME/Documents"
         "$HOME/Pictures"
         "$HOME/Movies"
         "$HOME/Music"
-        "$HOME/Library" # macOS
-        "$HOME/.local"  # Linux
-        "$HOME/.config" # Linux
-        "$HOME/goinfre" # 42 specific
+        "$HOME/Library"
+        "$HOME/.local" 
+        "$HOME/.config"
+        "$HOME/goinfre"
     )
     
     for search_path in "${search_paths[@]}"; do
         if [[ -d "$search_path" ]]; then
             echo -e "${DIM}Scanning: $search_path${RESET}"
             
-            # Find files >42MB not accessed in 7 days
             while IFS= read -r -d '' file; do
                 large_files+=("$file")
             done < <(find "$search_path" -type f -size +41M -atime +7 -print0 2>/dev/null)
@@ -393,7 +383,6 @@ find_large_files() {
     echo -e "${YELLOW}📋 Found ${#large_files[@]} large unused files:${RESET}"
     echo
     
-    # Display files with sizes
     for file in "${large_files[@]}"; do
         if [[ -f "$file" ]]; then
             size=$(du -h "$file" 2>/dev/null | cut -f1)
@@ -407,7 +396,6 @@ find_large_files() {
     handle_file_deletion "${large_files[@]}"
 }
 
-# Find duplicate files
 find_duplicates() {
     echo -e "${PURPLE}🔍 Scanning for duplicate files...${RESET}"
     echo
@@ -417,10 +405,10 @@ find_duplicates() {
     
     # Search in common directories
     local search_paths=(
-        "$HOME/Documents"
-        "$HOME/Pictures"
-        "$HOME/Movies"
         "$HOME/Music"
+        "$HOME/Documents"
+        "$HOME/Movies"
+        "$HOME/Pictures"
     )
     
     for search_path in "${search_paths[@]}"; do
@@ -429,7 +417,6 @@ find_duplicates() {
             
             while IFS= read -r -d '' file; do
                 if [[ -f "$file" ]]; then
-                    # Simple duplicate detection based on filename patterns
                     basename_file=$(basename "$file")
                     if [[ "$basename_file" =~ \([0-9]+\)$ ]] || [[ "$basename_file" =~ \ copy$ ]] || [[ "$basename_file" =~ \ Copy$ ]]; then
                         duplicates+=("$file")
@@ -458,7 +445,6 @@ find_duplicates() {
     handle_file_deletion "${duplicates[@]}"
 }
 
-# Handle file deletion with multiple confirmation prompts
 handle_file_deletion() {
     local files=("$@")
     local total_files=${#files[@]}
@@ -467,7 +453,7 @@ handle_file_deletion() {
         return
     fi
     
-    # Confirmation prompts (randomly selected)
+	#//TODO: Prblm in macos  display; 
     local prompts=(
         "Are you absolutely sure you want to delete these files?"
         "This action cannot be undone. Do you really want to proceed?"
@@ -476,7 +462,7 @@ handle_file_deletion() {
         "Last chance to reconsider. Delete these files?"
         "Are you 100% confident about removing these files?"
         "This will permanently remove the files. Continue?"
-	"Wax Mt2ark A3chiri, Ndo5lo 3liha ? "
+		"Wax Mt2ark A3chiri, Ndo5lo 3liha ? "
         "Confirm deletion of the selected files?"
         "Ready to permanently delete these files?"
     )
@@ -491,7 +477,6 @@ handle_file_deletion() {
     
     case $choice in
         1)
-            # File by file deletion
             local deleted_count=0
             local saved_space=0
             
@@ -504,7 +489,7 @@ handle_file_deletion() {
                     echo -e "${CYAN}📄 File: ${BOLD}$file${RESET}"
                     echo -e "${DIM}   Size: $size_human${RESET}"
                     
-                    # Get 3 random prompts
+                    # 3 random prompts
                     local random_prompts=()
                     for i in {1..3}; do
                         random_prompts+=(${prompts[$RANDOM % ${#prompts[@]}]})
@@ -514,7 +499,7 @@ handle_file_deletion() {
                     for prompt in "${random_prompts[@]}"; do
                         echo -e "${YELLOW}$prompt${RESET}"
                         read -p "Type 'y', 'Y', or 'yes': " answer
-                        
+                        # //TODO: need to be parsed 
                         if [[ "$answer" =~ ^[Yy]$|^[Yy][Ee][Ss]$ ]]; then
                             ((confirmed++))
                         else
@@ -560,7 +545,7 @@ handle_file_deletion() {
             echo -e "${YELLOW}Total space to be freed: $(( total_size / 1024 ))MB${RESET}"
             echo
             
-            # 3 random confirmations
+            # usr confirmations
             local random_prompts=()
             for i in {1..3}; do
                 random_prompts+=(${prompts[$RANDOM % ${#prompts[@]}]})
@@ -609,7 +594,6 @@ handle_file_deletion() {
     esac
 }
 
-# Show final results with beautiful formatting
 show_results() {
     local saved_before=$1
     local saved_cleaning=$2
@@ -650,7 +634,7 @@ show_results() {
     echo -e "   ${YELLOW}${BOLD}Total Saved: ${total_mb}MB${RESET}"
     echo
     
-    # Calculate percentage saved (rough estimate)
+    # Calculate percentage saved (Rough estimate)
     if [[ $total_mb -gt 0 ]]; then
         echo -e "${PURPLE}📊 ${BOLD}Performance Impact:${RESET}"
         if [[ $total_mb -lt 100 ]]; then
@@ -665,19 +649,24 @@ show_results() {
         echo
     fi
     
-    # Show footer with GitHub link
+    #  footer
     echo -e "${DIM}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
     echo -e "${CYAN}🐙 ${BOLD}Enjoyed 42BleachClean?${RESET}"
-    echo -e "   ${WHITE}⭐ Star us on GitHub:${RESET} ${BLUE}${BOLD}https://github.com/yomazini/42BleachClean${RESET}"
+    echo -e "   ${WHITE}⭐ Star us on GITHUB:${RESET} ${BLUE}${BOLD}https://github.com/yomazini/42BleachClean${RESET}"
     echo -e "   ${WHITE}🐛 Report issues or contribute:${RESET} ${DIM}We welcome your feedback!${RESET}"
     echo -e "${DIM}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
     echo
 }
 
-# Main execution function
 main() {
-    # Parse arguments
-    case "${1:-}" in
+    # Parse args
+
+	#//TODO: Adding feature; ==> add atreboot {after x min} of kernal into prog 
+	# ==> usr preference and usr select nmr of min {deamons | systmD units | cronjobs};
+	# //TODO: each X hours run blc  ==> usr preference for this as well 
+	# //TODO: adding logs file ==> deleted files || delete logs file {weekly} if not {usr specif it}
+
+	case "${1:-}" in
         "update")
             show_header
             update_script
@@ -699,7 +688,6 @@ main() {
             quiet_mode=true
             ;;
         "")
-            # Normal execution
             ;;
         *)
             echo -e "${RED}❌ Unknown option: $1${RESET}"
@@ -708,23 +696,19 @@ main() {
             ;;
     esac
     
-    # Set OS detection
     OS=$(detect_os)
     
-    # Check if OS is supported
     if [[ "$OS" == "Unknown" ]]; then
         echo -e "${RED}❌ Unsupported operating system${RESET}"
         echo -e "42BleachClean supports macOS and Linux only"
         exit 1
     fi
     
-    # Show header unless in quiet mode
     if [[ "${quiet_mode:-false}" != "true" ]]; then
         show_header
         sleep 2
     fi
     
-    # Perform system cleanup
     saved_cleaning=$(clean_system false)
     
     if [[ "${quiet_mode:-false}" != "true" ]]; then
@@ -732,7 +716,6 @@ main() {
         echo -e "${PURPLE}🎯 ${BOLD}Advanced Cleanup Options${RESET}"
         echo
         
-        # Ask about large files
         echo -e "${YELLOW}🔍 Would you like to scan for large files (>42MB) not used in the last week?${RESET}"
         echo -e "   ${DIM}This will help you find potentially unnecessary large files${RESET}"
         
@@ -756,7 +739,6 @@ main() {
         
         echo
         
-        # Ask about duplicates if user didn't check large files
         if [[ $saved_extra_large -eq 0 ]]; then
             echo -e "${YELLOW}🔍 Would you like to scan for duplicate files?${RESET}"
             echo -e "   ${DIM}This will find files with names like 'file (1).txt' or 'file copy.txt'${RESET}"
@@ -780,13 +762,11 @@ main() {
             done
         fi
         
-        # Calculate total extra savings
         total_extra_saved=$((${saved_extra_large:-0} + ${saved_extra_duplicates:-0}))
         
-        # Show final results
         show_results 0 "${saved_cleaning:-0}" "${total_extra_saved:-0}"
     else
-        # Quiet mode - just show basic results
+        # show basic results //TODO: need to be enhanced
         if [[ $saved_cleaning -gt 0 ]]; then
             saved_mb=$((saved_cleaning / 1024))
             echo "Cleanup complete: ${saved_mb}MB freed"
@@ -794,14 +774,12 @@ main() {
     fi
 }
 
-# Trap to handle interruptions gracefully
 trap 'echo -e "\n${YELLOW}⚠️  Cleanup interrupted by user${RESET}"; exit 130' INT
 
-# Create necessary functions for installation
 create_installer() {
     cat << 'EOF' > "$HOME/install_bleachclean.sh"
 #!/bin/bash
-# 42BleachClean Installer
+# 42BleachClean Installer 
 
 echo -e "\n\033[1;36m🚀 Installing 42BleachClean...\033[0m\n"
 
@@ -828,13 +806,14 @@ echo -e "\033[1;33m📝 Please run: source $shell_rc\033[0m"
 echo -e "\033[1;33m🧹 Then use: bleachclean\033[0m\n"
 EOF
     
+	#chmod 777 "$HOME/install_bleachclean.sh"
+	#chmod 777 "$HOME/logs_creator.sh"
+
     chmod +x "$HOME/install_bleachclean.sh"
+
 }
 
-# Check if script is being sourced or executed directly
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    # Script is being executed directly
+
     main "$@"
 fi
-
-

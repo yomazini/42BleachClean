@@ -2,7 +2,6 @@
 # 42BleachClean Installer
 # The Ultimate Hybrid Cleaner for 42/1337 Students
 
-# Color definitions
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -14,7 +13,6 @@ BOLD='\033[1m'
 DIM='\033[2m'
 RESET='\033[0m'
 
-# Animated header
 show_install_header() {
     clear
     echo -e "${CYAN}${BOLD}"
@@ -47,7 +45,6 @@ show_install_header() {
     echo
 }
 
-# Progress animation
 progress_animation() {
     local duration=$1
     local message=$2
@@ -68,7 +65,6 @@ progress_animation() {
     echo
 }
 
-# Detect OS
 detect_os() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
         echo "macOS"
@@ -79,7 +75,6 @@ detect_os() {
     fi
 }
 
-# Check requirements
 check_requirements() {
     echo -e "${BLUE}🔍 Checking system requirements...${RESET}"
     
@@ -93,7 +88,6 @@ check_requirements() {
     
     echo -e "${GREEN}✅ Operating System: $OS${RESET}"
     
-    # Check if we have write permissions to home directory
     if [[ ! -w "$HOME" ]]; then
         echo -e "${RED}❌ No write permission to home directory${RESET}"
         exit 1
@@ -101,7 +95,6 @@ check_requirements() {
     
     echo -e "${GREEN}✅ Home directory writable${RESET}"
     
-    # Check for required commands
     local required_commands=("find" "du" "rm" "cp" "chmod")
     for cmd in "${required_commands[@]}"; do
         if ! command -v "$cmd" &> /dev/null; then
@@ -114,7 +107,6 @@ check_requirements() {
     echo
 }
 
-# Installation confirmation
 confirm_installation() {
     echo -e "${YELLOW}${BOLD}📋 Installation Overview:${RESET}"
     echo
@@ -150,12 +142,10 @@ confirm_installation() {
     done
 }
 
-# Perform installation
 install_bleachclean() {
     echo -e "${CYAN}🚀 Starting installation...${RESET}"
     echo
     
-    # Check if already installed
     if [[ -f "$HOME/bleachclean.sh" ]]; then
         echo -e "${YELLOW}⚠️  42BleachClean is already installed${RESET}"
         
@@ -178,7 +168,6 @@ install_bleachclean() {
         done
     fi
     
-    # Copy main script
     if [[ -f "./bleachclean.sh" ]]; then
         progress_animation 20 "📁 Copying main script..."
         cp "./bleachclean.sh" "$HOME/"
@@ -189,13 +178,11 @@ install_bleachclean() {
         exit 1
     fi
     
-    # Setup shell alias
     progress_animation 15 "🔧 Configuring shell alias..."
     
     shell_name=$(basename "$SHELL")
     shell_rc="$HOME/.${shell_name}rc"
     
-    # Backup existing shell config
     if [[ -f "$shell_rc" ]]; then
         cp "$shell_rc" "${shell_rc}.42bleachclean.backup.$(date +%s)" 2>/dev/null
     fi
@@ -208,6 +195,8 @@ install_bleachclean() {
     
     # Add new alias
     echo "# 42BleachClean alias - Added by installer" >> "$shell_rc"
+	echo "# 42BleachClean alias - Added by installer" >> ~/.bashrc
+	
     echo "alias bleachclean='bash \$HOME/bleachclean.sh'" >> "$shell_rc"
     echo "alias bleachclean='bash \$HOME/bleachclean.sh'" >> ~/.bashrc
      echo "alias blc='bash \$HOME/bleachclean.sh'" >> "$shell_rc"
@@ -215,7 +204,7 @@ install_bleachclean() {
     
     echo -e "${GREEN}✅ Shell alias configured${RESET}"
     
-    # Final verification
+    #  verification
     progress_animation 10 "🔍 Verifying installation..."
     
     if [[ -f "$HOME/bleachclean.sh" ]] && grep -q "alias bleachclean" "$shell_rc" 2>/dev/null; then
@@ -226,7 +215,6 @@ install_bleachclean() {
     fi
 }
 
-# Show completion message
 show_completion() {
     echo
     echo -e "${GREEN}${BOLD}"
@@ -264,7 +252,6 @@ show_completion() {
     echo
 }
 
-# Main installer function
 main() {
     show_install_header
     sleep 1
@@ -281,10 +268,8 @@ main() {
     show_completion
 }
 
-# Handle interruptions
 trap 'echo -e "\n${YELLOW}⚠️  Installation interrupted by user${RESET}"; exit 130' INT
 
-# Run installer
 main "$@"
 
   
