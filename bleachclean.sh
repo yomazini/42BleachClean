@@ -817,8 +817,11 @@ shell_rc="$HOME/.${shell_name}rc"
 sed -i.bak '/alias.*bleachclean/d' "$shell_rc" 2>/dev/null
 
 # Add new alias
+
 echo "alias bleachclean='bash $HOME/bleachclean.sh'" >> "$shell_rc"
 echo "alias bleachclean='bash $HOME/bleachclean.sh'" >> ~/.bashrc
+echo "alias blc='bash $HOME/bleachclean.sh'" >> "$shell_rc"
+echo "alias blc='bash $HOME/bleachclean.sh'" >> ~/.bashrc
 
 echo -e "\033[1;32m✅ Installation complete!\033[0m"
 echo -e "\033[1;33m📝 Please run: source $shell_rc\033[0m"
