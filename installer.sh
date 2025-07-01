@@ -210,6 +210,8 @@ install_bleachclean() {
     echo "# 42BleachClean alias - Added by installer" >> "$shell_rc"
     echo "alias bleachclean='bash \$HOME/bleachclean.sh'" >> "$shell_rc"
     echo "alias bleachclean='bash \$HOME/bleachclean.sh'" >> ~/.bashrc
+     echo "alias blc='bash \$HOME/bleachclean.sh'" >> "$shell_rc"
+    echo "alias blc='bash \$HOME/bleachclean.sh'" >> ~/.bashrc
     
     echo -e "${GREEN}✅ Shell alias configured${RESET}"
     
