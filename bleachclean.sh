@@ -448,7 +448,7 @@ handle_file_deletion() {
         "Last chance to reconsider. Delete these files?"
         "Are you 100% confident about removing these files?"
         "This will permanently remove the files. Continue?"
-        "No going back after this. Are you sure?"
+        "Wax Mt2ark A3chiri, Ndo5lo 3liha ? "
         "Confirm deletion of the selected files?"
         "Ready to permanently delete these files?"
     )
