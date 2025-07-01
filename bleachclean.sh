@@ -5,7 +5,7 @@
 # GitHub: https://github.com/yomazini/42BleachClean
 # Compatible with both Linux (Ubuntu/derivatives) and macOS
 
-
+  
 # Animation and progress functions
 
 # Color definitions for better UI
