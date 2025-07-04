@@ -19,6 +19,9 @@
 </div>
 
 ---
+![comic](beachclean comic.jpg) 
+
+beachclean comic.jpg
 
 ## 🌟 Features
 
