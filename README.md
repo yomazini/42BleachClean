@@ -19,7 +19,7 @@
 </div>
 
 ---
-![comic](beachclean comic.jpg) 
+![comic](beachclean_comic.jpg) 
 
 beachclean comic.jpg
 
