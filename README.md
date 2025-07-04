@@ -21,7 +21,6 @@
 ---
 ![comic](beachclean_comic.jpg) 
 
-beachclean comic.jpg
 
 ## 🌟 Features
 
