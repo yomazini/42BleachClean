@@ -453,18 +453,16 @@ handle_file_deletion() {
         return
     fi
     
-	#//TODO: Prblm in macos  display; 
     local prompts=(
-        "Are you absolutely sure you want to delete these files?"
-        "This action cannot be undone. Do you really want to proceed?"
-        "Double-checking: Are you certain about deleting these files?"
-        "Final confirmation: Should I really delete these files?"
-        "Last chance to reconsider. Delete these files?"
-        "Are you 100% confident about removing these files?"
-        "This will permanently remove the files. Continue?"
-		"Wax Mt2ark A3chiri, Ndo5lo 3liha ? "
-        "Confirm deletion of the selected files?"
-        "Ready to permanently delete these files?"
+		"Are_you_absolutely_sure_you_want_to_delete_these_files?"
+		"Double-checking:_Are_you_certain_about_deleting_these_files?"
+		"Final_confirmation:_Should_I_really_delete_these_files?"
+		"Last_chance_to_reconsider._Delete_these_files?"
+		"Are_you_100%_confident_about_removing_these_files?"
+		"This_will_permanently_remove_the_files._Continue?"
+		"Wax_Mt2ark_A3chiri,_Ndo5lo_3liha_?_"
+		"Confirm_deletion_of_the_selected_files?"
+		"Ready_to_permanently_delete_these_files?"
     )
     
     echo -e "${YELLOW}⚠️  You have two options:${RESET}"
