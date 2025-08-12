@@ -146,6 +146,7 @@ show_header() {
     echo
 }
 
+
 show_help() {
     echo -e "${CYAN}${BOLD}📖 42BleachClean Help & Usage Guide${RESET}"
     echo
@@ -157,26 +158,51 @@ show_help() {
     echo -e "  ${GREEN}bleachclean --quiet${RESET}            🤫 Run in quiet mode"
     echo -e "  ${GREEN}bleachclean --preview${RESET}          👀 Preview what will be cleaned"
     echo
+    echo -e "${PURPLE}${BOLD}AUTOMATION (Personal Laptops Only):${RESET}"
+    echo -e "  ${GREEN}bleachclean --setup-auto${RESET}       ⏰ Setup automatic cleaning"
+    echo -e "  ${GREEN}bleachclean --disable-auto${RESET}     🛑 Disable automatic cleaning"
+    echo -e "  ${GREEN}bleachclean --setup-notify${RESET}     🔔 Enable disk space notifications"
+    echo -e "  ${GREEN}bleachclean --disable-notify${RESET}   🔕 Disable notifications"
+    echo -e "  ${GREEN}bleachclean --status${RESET}           📊 Show automation status"
+    echo
     echo -e "${WHITE}${BOLD}FEATURES:${RESET}"
     echo -e "  ✨ ${CYAN}Cross-platform support${RESET} (macOS & Linux)"
     echo -e "  🚀 ${CYAN}Intelligent cache detection${RESET}"
     echo -e "  🎯 ${CYAN}42/1337 specific optimizations${RESET}"
     echo -e "  📊 ${CYAN}Detailed storage analysis${RESET}"
-    echo -e "  🔍 ${CYAN}Large file detection (>42MB)${RESET}"
-    echo -e "  🗑️  ${CYAN}Duplicate file removal${RESET}"
-    echo -e "  🎨 ${CYAN}Beautiful progress indicators${RESET}"
+    echo -e "  🔍 ${CYAN}Advanced duplicate file detection${RESET}"
+    echo -e "  🤖 ${CYAN}Smart environment detection${RESET}"
+    echo -e "  ⏰ ${CYAN}Automatic cleaning (personal laptops)${RESET}"
+    echo -e "  🔔 ${CYAN}Low disk space notifications${RESET}"
+    echo
+    echo -e "${WHITE}${BOLD}AUTOMATION DETAILS:${RESET}"
+    echo -e "${YELLOW}🔒 Safety First:${RESET}"
+    echo -e "  ${DIM}• Auto-cleaning only removes safe cache files${RESET}"
+    echo -e "  ${DIM}• Never touches personal documents, pictures, or projects${RESET}"
+    echo -e "  ${DIM}• Only enabled on personal laptops (not school computers)${RESET}"
+    echo
+    echo -e "${YELLOW}🔔 Notifications:${RESET}"
+    echo -e "  ${DIM}• Alerts when disk space drops below 500MB${RESET}"
+    echo -e "  ${DIM}• Uses system notifications (macOS/Linux)${RESET}"
+    echo -e "  ${DIM}• Requires user permission during setup${RESET}"
     echo
     echo -e "${WHITE}${BOLD}EXAMPLES:${RESET}"
     echo -e "  ${DIM}# Basic cleaning${RESET}"
     echo -e "  ${YELLOW}$ bleachclean${RESET}"
     echo
-    echo -e "  ${DIM}# Update the script${RESET}"
-    echo -e "  ${YELLOW}$ bleachclean update${RESET}"
+    echo -e "  ${DIM}# Setup daily auto-cleaning (personal laptops only)${RESET}"
+    echo -e "  ${YELLOW}$ bleachclean --setup-auto${RESET}"
     echo
-    echo -e "  ${DIM}# Deep clean with file analysis${RESET}"
-    echo -e "  ${YELLOW}$ bleachclean --deep${RESET}"
+    echo -e "  ${DIM}# Enable low disk space notifications${RESET}"
+    echo -e "  ${YELLOW}$ bleachclean --setup-notify${RESET}"
     echo
-    echo -e "${RED}⚠️  ${BOLD}IMPORTANT:${RESET} ${RED}This script is designed for 42/1337 students without sudo privileges${RESET}"
+    echo -e "  ${DIM}# Check automation status${RESET}"
+    echo -e "  ${YELLOW}$ bleachclean --status${RESET}"
+    echo
+    echo -e "${RED}⚠️  ${BOLD}IMPORTANT:${RESET}"
+    echo -e "  ${RED}• Designed for 42/1337 students (no sudo required)${RESET}"
+    echo -e "  ${RED}• Auto-features only available on personal laptops${RESET}"
+    echo -e "  ${RED}• All automation requires explicit user consent${RESET}"
     echo
 }
 
@@ -396,54 +422,175 @@ find_large_files() {
     handle_file_deletion "${large_files[@]}"
 }
 
+
 find_duplicates() {
-    echo -e "${PURPLE}🔍 Scanning for duplicate files...${RESET}"
+    echo -e "${PURPLE}🔍 Scanning for duplicate files using advanced detection...${RESET}"
     echo
     
     declare -A file_hashes
+    declare -A size_groups
     local duplicates=()
+    local processed=0
+    local total_files=0
     
-    # Search in common directories
+    # Search paths
     local search_paths=(
-        "$HOME/Music"
         "$HOME/Documents"
+        "$HOME/Pictures" 
         "$HOME/Movies"
-        "$HOME/Pictures"
+        "$HOME/Music"
+        "$HOME/goinfre"
+        #"$HOME/Desktop"
+        "$HOME/Downloads"
     )
     
+    echo -e "${CYAN}📊 Phase 1: Collecting files by size...${RESET}"
+    
+    # First pass: Group files by size (much faster than hashing everything)
     for search_path in "${search_paths[@]}"; do
         if [[ -d "$search_path" ]]; then
-            echo -e "${DIM}Scanning for duplicates in: $search_path${RESET}"
+            echo -e "${DIM}Scanning: $(basename "$search_path")${RESET}"
             
             while IFS= read -r -d '' file; do
                 if [[ -f "$file" ]]; then
-                    basename_file=$(basename "$file")
-                    if [[ "$basename_file" =~ \([0-9]+\)$ ]] || [[ "$basename_file" =~ \ copy$ ]] || [[ "$basename_file" =~ \ Copy$ ]]; then
-                        duplicates+=("$file")
+                    # Get file size in bytes
+                    if [[ "$OSTYPE" == "darwin"* ]]; then
+                        size=$(stat -f%z "$file" 2>/dev/null)
+                    else
+                        size=$(stat -c%s "$file" 2>/dev/null)
+                    fi
+                    
+                    if [[ -n "$size" && "$size" -gt 1024 ]]; then  # Only files > 1KB
+                        if [[ -n "${size_groups[$size]}" ]]; then
+                            size_groups[$size]="${size_groups[$size]}|$file"
+                        else
+                            size_groups[$size]="$file"
+                        fi
+                        ((total_files++))
                     fi
                 fi
-            done < <(find "$search_path" -type f -print0 2>/dev/null)
+            done < <(find "$search_path" -type f -size +1k -print0 2>/dev/null)
         fi
     done
     
-    if [[ ${#duplicates[@]} -eq 0 ]]; then
-        echo -e "${GREEN}✅ No obvious duplicates found!${RESET}"
+    if [[ $total_files -eq 0 ]]; then
+        echo -e "${GREEN}✅ No files found to analyze!${RESET}"
         return
     fi
     
-    echo -e "${YELLOW}📋 Found ${#duplicates[@]} potential duplicates:${RESET}"
+    echo -e "${CYAN}📊 Found $total_files files. Phase 2: Hash comparison...${RESET}"
     echo
     
-    for file in "${duplicates[@]}"; do
-        if [[ -f "$file" ]]; then
-            size=$(du -h "$file" 2>/dev/null | cut -f1)
-            echo -e "  ${CYAN}📄 ${file}${RESET} ${DIM}($size)${RESET}"
+    # Second pass: Only hash files that have the same size
+    for size in "${!size_groups[@]}"; do
+        IFS='|' read -ra files <<< "${size_groups[$size]}"
+        
+        if [[ ${#files[@]} -gt 1 ]]; then
+            # Multiple files with same size - need to hash them
+            echo -e "${DIM}Checking ${#files[@]} files of size $(( size / 1024 ))KB${RESET}"
+            
+            for file in "${files[@]}"; do
+                if [[ -f "$file" ]]; then
+                    ((processed++))
+                    
+                    # Progress indicator
+                    if (( processed % 10 == 0 )); then
+                        printf "\r${YELLOW}Processed: $processed/$total_files files${RESET}"
+                    fi
+                    
+                    # Generate hash based on file size for performance
+                    local hash=""
+                    if [[ $size -lt 5242880 ]]; then
+                        # Files < 5MB: Full MD5 hash
+                        hash=$(md5sum "$file" 2>/dev/null | cut -d' ' -f1)
+                    elif [[ $size -lt 52428800 ]]; then
+                        # Files 5MB-50MB: Hash first and last 1MB
+                        hash1=$(head -c 1048576 "$file" 2>/dev/null | md5sum | cut -d' ' -f1)
+                        hash2=$(tail -c 1048576 "$file" 2>/dev/null | md5sum | cut -d' ' -f1)
+                        hash="${hash1}_${hash2}_${size}"
+                    else
+                        # Large files >50MB: Sample-based hash
+                        hash1=$(head -c 1048576 "$file" 2>/dev/null | md5sum | cut -d' ' -f1)
+                        hash2=$(dd if="$file" bs=1048576 skip=$(( size / 2097152 )) count=1 2>/dev/null | md5sum | cut -d' ' -f1)
+                        hash3=$(tail -c 1048576 "$file" 2>/dev/null | md5sum | cut -d' ' -f1)
+                        hash="${hash1}_${hash2}_${hash3}_${size}"
+                    fi
+                    
+                    if [[ -n "$hash" ]]; then
+                        if [[ -n "${file_hashes[$hash]}" ]]; then
+                            # Found duplicate!
+                            duplicates+=("$file")
+                            echo -e "\r${YELLOW}🔄 Duplicate found: $(basename "$file")${RESET}"
+                        else
+                            file_hashes[$hash]="$file"
+                        fi
+                    fi
+                fi
+            done
         fi
     done
     
+    echo -e "\r${GREEN}✅ Analysis complete: $processed files processed${RESET}"
     echo
+    
+    if [[ ${#duplicates[@]} -eq 0 ]]; then
+        echo -e "${GREEN}🎉 No duplicate files found! Your system is clean.${RESET}"
+        return
+    fi
+    
+    echo -e "${YELLOW}📋 Found ${BOLD}${#duplicates[@]}${RESET}${YELLOW} duplicate files:${RESET}"
+    echo
+    
+    local total_duplicate_size=0
+    
+    for file in "${duplicates[@]}"; do
+        if [[ -f "$file" ]]; then
+            # Get file info
+            if [[ "$OSTYPE" == "darwin"* ]]; then
+                size_bytes=$(stat -f%z "$file" 2>/dev/null)
+                modified=$(stat -f "%Sm" "$file" 2>/dev/null)
+            else
+                size_bytes=$(stat -c%s "$file" 2>/dev/null)
+                modified=$(stat -c "%y" "$file" 2>/dev/null | cut -d' ' -f1)
+            fi
+            
+            # Human readable size
+            if [[ $size_bytes -lt 1024 ]]; then
+                size_display="${size_bytes}B"
+            elif [[ $size_bytes -lt 1048576 ]]; then
+                size_display="$((size_bytes / 1024))KB"
+            elif [[ $size_bytes -lt 1073741824 ]]; then
+                size_display="$((size_bytes / 1048576))MB"
+            else
+                size_display="$((size_bytes / 1073741824))GB"
+            fi
+            
+            total_duplicate_size=$((total_duplicate_size + size_bytes))
+            
+            echo -e "  ${CYAN}📄 $(basename "$file")${RESET}"
+            echo -e "     ${DIM}Path: $file${RESET}"
+            echo -e "     ${DIM}Size: $size_display | Modified: $modified${RESET}"
+            echo
+        fi
+    done
+    
+    if [[ $total_duplicate_size -gt 0 ]]; then
+        if [[ $total_duplicate_size -lt 1048576 ]]; then
+            savings_display="$((total_duplicate_size / 1024))KB"
+        elif [[ $total_duplicate_size -lt 1073741824 ]]; then
+            savings_display="$((total_duplicate_size / 1048576))MB"
+        else
+            savings_display="$((total_duplicate_size / 1073741824))GB"
+        fi
+        
+        echo -e "${PURPLE}💾 Potential space savings: ${BOLD}$savings_display${RESET}"
+        echo
+    fi
+    
     handle_file_deletion "${duplicates[@]}"
 }
+
+
 
 handle_file_deletion() {
     local files=("$@")
@@ -592,6 +739,249 @@ handle_file_deletion() {
     esac
 }
 
+
+
+setup_auto_cleaning() {
+    echo -e "${CYAN}🔄 Setting up automatic cleaning...${RESET}"
+    echo
+    
+    echo -e "${YELLOW}⚠️  Auto-cleaning will ONLY remove safe cache files, not personal data${RESET}"
+    echo -e "${DIM}   • Browser caches, temp files, .42* files${RESET}"
+    echo -e "${DIM}   • NO personal documents, pictures, or project files${RESET}"
+    echo
+    
+    echo -e "${WHITE}Choose auto-cleaning frequency:${RESET}"
+    echo -e "  ${GREEN}[1]${RESET} Daily (recommended for heavy users)"
+    echo -e "  ${GREEN}[2]${RESET} Every 3 days (balanced)"
+    echo -e "  ${GREEN}[3]${RESET} Weekly (light cleaning)"
+    echo -e "  ${GREEN}[4]${RESET} Disable auto-cleaning"
+    echo
+    
+    while true; do
+        read -p "Choose option [1-4]: " choice
+        case $choice in
+            1)
+                cron_schedule="0 3 * * *"  # Daily 3 AM
+                schedule_name="Daily"
+                break
+                ;;
+            2)
+                cron_schedule="0 3 */3 * *"  # Every 3 days 3 AM
+                schedule_name="Every 3 days"
+                break
+                ;;
+            3)
+                cron_schedule="0 3 * * 0"  # Weekly on Sunday 3 AM
+                schedule_name="Weekly"
+                break
+                ;;
+            4)
+                disable_auto_cleaning
+                return
+                ;;
+            *)
+                echo -e "${RED}Invalid option. Please choose 1-4.${RESET}"
+                ;;
+        esac
+    done
+    
+    # Create the auto-clean script
+    cat > "$HOME/.42bleachclean_auto.sh" << 'EOF'
+#!/bin/bash
+# 42BleachClean Auto-Cleaner (Safe Cache Only)
+
+LOG_FILE="$HOME/.42bleachclean_auto.log"
+DATE=$(date '+%Y-%m-%d %H:%M:%S')
+
+echo "[$DATE] Starting auto-cleanup..." >> "$LOG_FILE"
+
+# Only clean safe cache directories - NO personal files
+declare -a safe_targets_macos=(
+    "$HOME/Library/Caches/*"
+    "$HOME/Library/Application Support/Code/Cache/*"
+    "$HOME/Library/Application Support/Google/Chrome/*/Cache/*"
+    "$HOME/Library/Application Support/discord/Cache/*"
+    "$HOME/.Trash/*"
+    "$HOME/*.42*"
+    "$HOME/.zcompdump*"
+)
+
+declare -a safe_targets_linux=(
+    "$HOME/.cache/*"
+    "$HOME/.var/app/*/cache/*"
+    "$HOME/.npm/_cacache/*"
+    "$HOME/.local/share/Trash/*"
+    "$HOME/*.42*"
+)
+
+# Detect OS
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    targets=("${safe_targets_macos[@]}")
+else
+    targets=("${safe_targets_linux[@]}")
+fi
+
+total_saved=0
+
+for target in "${targets[@]}"; do
+    if [[ -e $target ]]; then
+        size_before=$(du -sk $target 2>/dev/null | awk '{print $1}' || echo 0)
+        rm -rf $target 2>/dev/null
+        total_saved=$((total_saved + size_before))
+    fi
+done
+
+saved_mb=$((total_saved / 1024))
+echo "[$DATE] Auto-cleanup completed. Saved: ${saved_mb}MB" >> "$LOG_FILE"
+
+# Rotate log file if it gets too big (keep only last 50 lines)
+if [[ $(wc -l < "$LOG_FILE" 2>/dev/null || echo 0) -gt 50 ]]; then
+    tail -50 "$LOG_FILE" > "$LOG_FILE.tmp" && mv "$LOG_FILE.tmp" "$LOG_FILE"
+fi
+EOF
+    
+    chmod +x "$HOME/.42bleachclean_auto.sh"
+    
+    # Add to crontab
+    (crontab -l 2>/dev/null | grep -v "42bleachclean"; echo "$cron_schedule $HOME/.42bleachclean_auto.sh") | crontab -
+    
+    echo -e "${GREEN}✅ Auto-cleaning enabled: $schedule_name${RESET}"
+    echo -e "${CYAN}📝 Logs will be saved to: ~/.42bleachclean_auto.log${RESET}"
+    echo
+}
+
+disable_auto_cleaning() {
+    echo -e "${BLUE}🛑 Disabling auto-cleaning...${RESET}"
+    
+    # Remove from crontab
+    (crontab -l 2>/dev/null | grep -v "42bleachclean") | crontab -
+    
+    # Remove auto-clean script
+    rm -f "$HOME/.42bleachclean_auto.sh"
+    rm -f "$HOME/.42bleachclean_auto.log"
+    
+    echo -e "${GREEN}✅ Auto-cleaning disabled${RESET}"
+    echo
+}
+
+check_auto_cleaning_status() {
+    if crontab -l 2>/dev/null | grep -q "42bleachclean"; then
+        schedule=$(crontab -l 2>/dev/null | grep "42bleachclean" | cut -d' ' -f1-5)
+        echo -e "${GREEN}✅ Auto-cleaning is enabled${RESET}"
+        echo -e "${DIM}   Schedule: $schedule${RESET}"
+        
+        if [[ -f "$HOME/.42bleachclean_auto.log" ]]; then
+            last_run=$(tail -1 "$HOME/.42bleachclean_auto.log" 2>/dev/null)
+            echo -e "${DIM}   Last run: $last_run${RESET}"
+        fi
+    else
+        echo -e "${YELLOW}⏸️  Auto-cleaning is disabled${RESET}"
+    fi
+}
+
+setup_notifications() {
+    echo -e "${CYAN}🔔 Setting up disk space notifications...${RESET}"
+    echo
+    
+    echo -e "${YELLOW}This will notify you when disk space is low${RESET}"
+    echo -e "${DIM}   • Checks available space every hour${RESET}"
+    echo -e "${DIM}   • Notifies when less than 500MB available${RESET}"
+    echo -e "${DIM}   • Uses system notifications (no internet required)${RESET}"
+    echo
+    
+    while true; do
+        read -p "Enable low disk space notifications? [y/N]: " yn
+        case $yn in
+            [Yy]*)
+                break
+                ;;
+            [Nn]*|"")
+                echo -e "${BLUE}🔕 Notifications disabled${RESET}"
+                return
+                ;;
+            *)
+                echo -e "${RED}Please answer yes (y) or no (n)${RESET}"
+                ;;
+        esac
+    done
+    
+    # Create notification script
+    cat > "$HOME/.42bleachclean_notify.sh" << 'EOF'
+#!/bin/bash
+# 42BleachClean Notification System
+
+# Get available space in MB
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    available_kb=$(df "$HOME" | tail -1 | awk '{print $4}')
+else
+    available_kb=$(df "$HOME" | tail -1 | awk '{print $4}')
+fi
+
+available_mb=$((available_kb / 1024))
+
+# If less than 500MB available, send notification
+if [[ $available_mb -lt 500 ]]; then
+    message="⚠️ Low disk space: Only ${available_mb}MB available. Run 'bleachclean' to free up space!"
+    
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS notification
+        osascript -e "display notification \"$message\" with title \"42BleachClean\""
+    else
+        # Linux notification
+        if command -v notify-send &> /dev/null; then
+            notify-send "42BleachClean" "$message"
+        fi
+    fi
+fi
+EOF
+    
+    chmod +x "$HOME/.42bleachclean_notify.sh"
+    
+    # Add to crontab (check every hour)
+    (crontab -l 2>/dev/null | grep -v "42bleachclean_notify"; echo "0 * * * * $HOME/.42bleachclean_notify.sh") | crontab -
+    
+    echo -e "${GREEN}✅ Notifications enabled${RESET}"
+    echo -e "${CYAN}📝 Will notify when less than 500MB available${RESET}"
+    echo
+}
+
+disable_notifications() {
+    echo -e "${BLUE}🔕 Disabling notifications...${RESET}"
+    
+    (crontab -l 2>/dev/null | grep -v "42bleachclean_notify") | crontab -
+    
+    rm -f "$HOME/.42bleachclean_notify.sh"
+    
+    echo -e "${GREEN}✅ Notifications disabled${RESET}"
+    echo
+}
+
+# Personal laptop detection
+detect_environment() {
+    local is_personal=false
+    
+    # Check for personal laptop indicators or 13 usr
+    if [[ "$USER" != "guest" ]] && [[ ! "$HOME" =~ ^/nfs/ ]] && [[ ! "$HOME" =~ ^/sgoinfre/ ]]; then
+        # Check if we can write to system locations (verfy personal laptop)
+        if [[ -w "/usr/local" ]] || [[ -w "/opt" ]] || [[ "$HOME" =~ ^/Users/ ]] || [[ "$HOME" =~ ^/home/ ]]; then
+            is_personal=true
+        fi
+    fi
+    
+    if [[ "$is_personal" == "true" ]]; then
+        echo -e "${GREEN}🏠 Personal laptop detected${RESET}"
+        echo -e "${CYAN}💡 Enhanced features available (auto-clean, notifications)${RESET}"
+        return 0
+    else
+        echo -e "${BLUE}🏫 School/shared computer detected${RESET}"
+        echo -e "${DIM}   Auto-features disabled for safety${RESET}"
+        return 1
+    fi
+}
+
+
+
+
 show_results() {
     local saved_before=$1
     local saved_cleaning=$2
@@ -604,7 +994,7 @@ show_results() {
     echo "╚══════════════════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     
-    # Get current disk info
+    # Get current disk info later TODO duf mac dysk linux intefrated 
     if [[ "$OS" == "macOS" ]]; then
         disk_info=$(df -h "$HOME" | tail -1)
         available_after=$(echo $disk_info | awk '{print $4}')
@@ -663,8 +1053,8 @@ main() {
 	# ==> usr preference and usr select nmr of min {deamons | systmD units | cronjobs};
 	# //TODO: each X hours run blc  ==> usr preference for this as well 
 	# //TODO: adding logs file ==> deleted files || delete logs file {weekly} if not {usr specif it}
-
-	case "${1:-}" in
+   
+    case "${1:-}" in
         "update")
             show_header
             update_script
@@ -685,6 +1075,51 @@ main() {
         "--quiet")
             quiet_mode=true
             ;;
+        "--setup-auto")
+            show_header
+            if detect_environment; then
+                setup_auto_cleaning
+            else
+                echo -e "${YELLOW}⚠️  Auto-cleaning is only available on personal laptops${RESET}"
+                echo -e "${DIM}   This is disabled on school/shared computers for safety${RESET}"
+            fi
+            exit 0
+            ;;
+        "--disable-auto")
+            show_header
+            disable_auto_cleaning
+            exit 0
+            ;;
+        "--setup-notify")
+            show_header
+            if detect_environment; then
+                setup_notifications
+            else
+                echo -e "${YELLOW}⚠️  Notifications are only available on personal laptops${RESET}"
+                echo -e "${DIM}   This is disabled on school/shared computers${RESET}"
+            fi
+            exit 0
+            ;;
+        "--disable-notify")
+            show_header
+            disable_notifications
+            exit 0
+            ;;
+        "--status")
+            show_header
+            echo -e "${CYAN}📊 42BleachClean Automation Status${RESET}"
+            echo
+            detect_environment
+            echo
+            check_auto_cleaning_status
+            echo
+            if crontab -l 2>/dev/null | grep -q "42bleachclean_notify"; then
+                echo -e "${GREEN}🔔 Notifications: Enabled${RESET}"
+            else
+                echo -e "${YELLOW}🔕 Notifications: Disabled${RESET}"
+            fi
+            exit 0
+            ;;
         "")
             ;;
         *)
@@ -693,7 +1128,7 @@ main() {
             exit 1
             ;;
     esac
-    
+
     OS=$(detect_os)
     
     if [[ "$OS" == "Unknown" ]]; then
@@ -794,10 +1229,15 @@ sed -i.bak '/alias.*bleachclean/d' "$shell_rc" 2>/dev/null
 
 # Add new alias
 
-echo "alias bleachclean='bash $HOME/bleachclean.sh'" >> "$shell_rc"
-echo "alias bleachclean='bash $HOME/bleachclean.sh'" >> ~/.bashrc
-echo "alias blc='bash $HOME/bleachclean.sh'" >> "$shell_rc"
-echo "alias blc='bash $HOME/bleachclean.sh'" >> ~/.bashrc
+echo "# 42BleachClean aliases - Added by installer" >> "$shell_rc"
+echo "# 42BleachClean aliases - Added by installer" >> ~/.bashrc
+
+echo "alias bleachclean='bash \$HOME/bleachclean.sh'" >> "$shell_rc"
+echo "alias bleachclean='bash \$HOME/bleachclean.sh'" >> ~/.bashrc
+
+echo "alias blc='bash \$HOME/bleachclean.sh --quiet'" >> "$shell_rc"
+echo "alias blc='bash \$HOME/bleachclean.sh --quiet'" >> ~/.bashrc
+
 
 echo -e "\033[1;32m✅ Installation complete!\033[0m"
 echo -e "\033[1;33m📝 Please run: source $shell_rc\033[0m"
