@@ -77,7 +77,7 @@
 ### 🚀 **Quick Install (One-liner)**
 
 ```bash
-git clone https://github.com/yomazini/42BleachClean.git && cd 42BleachClean && chmod +x installer.sh && ./installer.sh && source ~/.bashrc
+git clone https://github.com/yomazini/42BleachClean.git && cd 42BleachClean && chmod +x installer.sh && ./installer.sh
 ```
 
 ### 🛠️ **Manual Installation**
