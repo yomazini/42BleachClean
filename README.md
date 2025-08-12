@@ -49,6 +49,27 @@
 - 🎭 **Interactive Prompts**: Multiple confirmation levels for safety
 - 📊 **Detailed Reports**: Comprehensive cleanup summaries
 
+  ## 🆕 **NEW AUTOMATION FEATURES** 
+
+### 🤖 **Smart Auto-Cleaning**
+- ⏰ **Scheduled Cleaning**: Automatically clean cache files on schedule
+- 🏠 **Environment Detection**: Only enabled on personal laptops (disabled on school computers)
+- 🔒 **Safety First**: Only removes safe cache files, never touches personal data
+- ⚙️ **Customizable**: Daily, every 3 days, or weekly cleaning schedules
+
+### 🔔 **Intelligent Notifications**
+- 📊 **Disk Space Monitoring**: Alerts when storage drops below 500MB
+- 🖥️ **Cross-Platform**: Native notifications on macOS and Linux  
+- 🔕 **User Control**: Requires explicit permission, can be disabled anytime
+- ⏱️ **Smart Timing**: Checks every 4 hours, won't spam you
+
+### 🔍 **Enhanced Duplicate Detection**
+- 🧬 **Hash-Based Analysis**: Uses MD5 checksums for accurate detection
+- ⚡ **Performance Optimized**: Smart algorithms for different file sizes
+- 📊 **Size Grouping**: Groups files by size first, then compares content
+- 💾 **Space Savings**: Shows exact duplicate file sizes and potential savings
+
+
 ---
 
 ## 📦 Installation
@@ -56,7 +77,7 @@
 ### 🚀 **Quick Install (One-liner)**
 
 ```bash
-git clone https://github.com/yomazini/42BleachClean.git && cd 42BleachClean && chmod +x installer.sh && ./installer.sh
+git clone https://github.com/yomazini/42BleachClean.git && cd 42BleachClean && chmod +x installer.sh && ./installer.sh && source ~/.bashrc
 ```
 
 ### 🛠️ **Manual Installation**
@@ -100,18 +121,29 @@ git clone https://github.com/yomazini/42BleachClean.git && cd 42BleachClean && c
 
 ### 📋 **Basic Commands**
 
+| Command | Mode | Description |
+|---------|------|-------------|
+| `bleachclean` | Interactive | Full UI with progress bars and prompts |
+| `blc` | Quiet | Fast cleaning with minimal output |
+| `bleachclean --help` | Info | Show all available options |
+| `bleachclean --deep` | Interactive | Deep clean with file analysis |
+| `bleachclean --preview` | Safe | Preview what will be cleaned |
 ```bash
-                # YOU CAN ALWAYS USE `blc` FOR SHORT
+bleachclean --setup-auto        # Enable automatic cleaning
+bleachclean --disable-auto      # Disable automatic cleaning
+bleachclean --setup-notify      # Enable disk space notifications
+bleachclean --disable-notify    # Disable notifications  
+bleachclean --status           # Check automation status
 ```
 
-| Command | Description | Example |
-|---------|-------------|---------|
-| `bleachclean` | Run standard cleanup | `bleachclean` |
-| `bleachclean --help` | Show help information | `bleachclean --help` |
-| `bleachclean --preview` | Preview cleanup (safe mode) | `bleachclean --preview` |
-| `bleachclean --deep` | Deep clean with file analysis | `bleachclean --deep` |
-| `bleachclean --quiet` | Run in quiet mode | `bleachclean --quiet` |
-| `bleachclean update` | Update to latest version | `bleachclean update` |
+### 🤖 **Automation Commands**
+### 📊 **Automation Options**
+|----------|-------------|----------|
+| **Daily** | Cleans cache every day at 3 AM | Heavy users, developers |
+| **Every 3 Days** | Balanced cleaning schedule | Normal usage patterns |
+| **Weekly** | Cleans every Sunday at 3 AM | Light users, minimal maintenance |
+
+---
 
 ---
 
