@@ -136,13 +136,6 @@ bleachclean --disable-notify    # Disable notifications
 bleachclean --status           # Check automation status
 ```
 
-### 🤖 **Automation Commands**
-### 📊 **Automation Options**
-|----------|-------------|----------|
-| **Daily** | Cleans cache every day at 3 AM | Heavy users, developers |
-| **Every 3 Days** | Balanced cleaning schedule | Normal usage patterns |
-| **Weekly** | Cleans every Sunday at 3 AM | Light users, minimal maintenance |
-
 ---
 
 ---
