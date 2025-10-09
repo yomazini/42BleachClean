@@ -2,7 +2,6 @@
 # 42BleachClean Installer
 # The Ultimate Hybrid Cleaner for 42/1337 Students
 
-# Color definitions
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -14,25 +13,24 @@ BOLD='\033[1m'
 DIM='\033[2m'
 RESET='\033[0m'
 
-# Animated header
 show_install_header() {
     clear
     echo -e "${CYAN}${BOLD}"
     echo "████████████████████████████████████████████████████████████████████████"
     echo "██                                                                    ██"
-    echo "██  ██████╗ ██████╗ ██████╗ ██╗     ███████╗ █████╗  ██████╗██╗  ██╗  ██"
-    echo "██  ██╔══██╗╚════██╗██╔══██╗██║     ██╔════╝██╔══██╗██╔════╝██║  ██║  ██"
-    echo "██  ██████╔╝ █████╔╝██████╔╝██║     █████╗  ███████║██║     ███████║  ██"
-    echo "██  ██╔══██╗██╔═══╝ ██╔══██╗██║     ██╔══╝  ██╔══██║██║     ██╔══██║  ██"
-    echo "██  ██████╔╝███████╗██████╔╝███████╗███████╗██║  ██║╚██████╗██║  ██║  ██"
-    echo "██  ╚═════╝ ╚══════╝╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝  ██"
+    echo "██      ██████╗ ██╗     ███████╗ █████╗  ██████╗██╗  ██╗              ██"
+    echo "██      ██╔══██╗██║     ██╔════╝██╔══██╗██╔════╝██║  ██║              ██"
+    echo "██      ██████╔╝██║     █████╗  ███████║██║     ███████║              ██"
+    echo "██      ██╔══██╗██║     ██╔══╝  ██╔══██║██║     ██╔══██║              ██"
+    echo "██      ██████╔╝███████╗███████╗██║  ██║╚██████╗██║  ██║              ██"
+    echo "██      ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝              ██"
     echo "██                                                                    ██"
-    echo "██     ██╗███╗   ██╗███████╗████████╗ █████╗ ██╗     ██╗     ███████╗ ██"
-    echo "██     ██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║     ██║     ██╔════╝ ██"
-    echo "██     ██║██╔██╗ ██║███████╗   ██║   ███████║██║     ██║     █████╗   ██"
-    echo "██     ██║██║╚██╗██║╚════██║   ██║   ██╔══██║██║     ██║     ██╔══╝   ██"
-    echo "██     ██║██║ ╚████║███████║   ██║   ██║  ██║███████╗███████╗███████╗ ██"
-    echo "██     ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ██"
+    echo "██     ██╗███╗   ██╗███████╗████████╗ █████╗ ██╗     ██╗              ██"
+    echo "██     ██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║     ██║              ██"
+    echo "██     ██║██╔██╗ ██║███████╗   ██║   ███████║██║     ██║              ██"
+    echo "██     ██║██║╚██╗██║╚════██║   ██║   ██╔══██║██║     ██║              ██"
+    echo "██     ██║██║ ╚████║███████║   ██║   ██║  ██║███████╗███████          ██"
+    echo "██     ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝         ██"
     echo "██                                                                    ██"
     echo "████████████████████████████████████████████████████████████████████████"
     echo -e "${RESET}"
@@ -47,7 +45,6 @@ show_install_header() {
     echo
 }
 
-# Progress animation
 progress_animation() {
     local duration=$1
     local message=$2
@@ -68,7 +65,6 @@ progress_animation() {
     echo
 }
 
-# Detect OS
 detect_os() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
         echo "macOS"
@@ -79,7 +75,6 @@ detect_os() {
     fi
 }
 
-# Check requirements
 check_requirements() {
     echo -e "${BLUE}🔍 Checking system requirements...${RESET}"
     
@@ -93,7 +88,6 @@ check_requirements() {
     
     echo -e "${GREEN}✅ Operating System: $OS${RESET}"
     
-    # Check if we have write permissions to home directory
     if [[ ! -w "$HOME" ]]; then
         echo -e "${RED}❌ No write permission to home directory${RESET}"
         exit 1
@@ -101,7 +95,6 @@ check_requirements() {
     
     echo -e "${GREEN}✅ Home directory writable${RESET}"
     
-    # Check for required commands
     local required_commands=("find" "du" "rm" "cp" "chmod")
     for cmd in "${required_commands[@]}"; do
         if ! command -v "$cmd" &> /dev/null; then
@@ -114,7 +107,6 @@ check_requirements() {
     echo
 }
 
-# Installation confirmation
 confirm_installation() {
     echo -e "${YELLOW}${BOLD}📋 Installation Overview:${RESET}"
     echo
@@ -150,12 +142,10 @@ confirm_installation() {
     done
 }
 
-# Perform installation
 install_bleachclean() {
     echo -e "${CYAN}🚀 Starting installation...${RESET}"
     echo
     
-    # Check if already installed
     if [[ -f "$HOME/bleachclean.sh" ]]; then
         echo -e "${YELLOW}⚠️  42BleachClean is already installed${RESET}"
         
@@ -178,7 +168,6 @@ install_bleachclean() {
         done
     fi
     
-    # Copy main script
     if [[ -f "./bleachclean.sh" ]]; then
         progress_animation 20 "📁 Copying main script..."
         cp "./bleachclean.sh" "$HOME/"
@@ -189,13 +178,11 @@ install_bleachclean() {
         exit 1
     fi
     
-    # Setup shell alias
     progress_animation 15 "🔧 Configuring shell alias..."
     
     shell_name=$(basename "$SHELL")
     shell_rc="$HOME/.${shell_name}rc"
     
-    # Backup existing shell config
     if [[ -f "$shell_rc" ]]; then
         cp "$shell_rc" "${shell_rc}.42bleachclean.backup.$(date +%s)" 2>/dev/null
     fi
@@ -207,12 +194,19 @@ install_bleachclean() {
     fi
     
     # Add new alias
-    echo "# 42BleachClean alias - Added by installer" >> "$shell_rc"
-    echo "alias bleachclean='bash \$HOME/bleachclean.sh'" >> "$shell_rc"
-    
+   
+echo "# 42BleachClean aliases - Added by installer" >> "$shell_rc"
+echo "# 42BleachClean aliases - Added by installer" >> ~/.bashrc
+
+echo "alias bleachclean='bash \$HOME/bleachclean.sh'" >> "$shell_rc"
+echo "alias bleachclean='bash \$HOME/bleachclean.sh'" >> ~/.bashrc
+
+echo "alias blc='bash \$HOME/bleachclean.sh --quiet'" >> "$shell_rc"
+echo "alias blc='bash \$HOME/bleachclean.sh --quiet'" >> ~/.bashrc
+
     echo -e "${GREEN}✅ Shell alias configured${RESET}"
     
-    # Final verification
+    #  verification
     progress_animation 10 "🔍 Verifying installation..."
     
     if [[ -f "$HOME/bleachclean.sh" ]] && grep -q "alias bleachclean" "$shell_rc" 2>/dev/null; then
@@ -223,7 +217,6 @@ install_bleachclean() {
     fi
 }
 
-# Show completion message
 show_completion() {
     echo
     echo -e "${GREEN}${BOLD}"
@@ -253,34 +246,155 @@ show_completion() {
     echo
     echo -e "${DIM}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
     echo -e "${BLUE}🐙 ${BOLD}Support & Contributions:${RESET}"
-    echo -e "   ${WHITE}GitHub:${RESET} ${CYAN}https://github.com/yomazini/42BleachClean${RESET}"
+    echo -e "   ${WHITE}🔗 GitHub:${RESET} ${CYAN}https://github.com/yomazini/42BleachClean${RESET}"
+    echo -e "   ${WHITE}🔗 LinkedIn:${RESET} ${CYAN}https://www.linkedin.com/in/youssef-mazini/${RESET}"
     echo -e "   ${WHITE}Issues:${RESET} ${DIM}Report bugs and request features${RESET}"
     echo -e "   ${WHITE}Stars:${RESET} ${YELLOW}⭐ Give us a star if you find it useful!${RESET}"
     echo -e "${DIM}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
     echo
 }
 
-# Main installer function
+
+setup_automation_on_install() {
+    echo
+    echo -e "${PURPLE}🤖 ${BOLD}Smart Automation Setup${RESET}"
+    echo
+
+    # Detect environment type 1337/42 flgas later
+    local is_personal=false
+    if [[ "$USER" != "guest" ]] && [[ ! "$HOME" =~ ^/nfs/ ]] && [[ ! "$HOME" =~ ^/sgoinfre/ ]]; then
+        if [[ -w "/usr/local" ]] || [[ -w "/opt" ]] || [[ "$HOME" =~ ^/Users/ ]] || [[ "$HOME" =~ ^/home/ ]]; then
+            is_personal=true
+        fi
+    fi
+
+    if [[ "$is_personal" == "true" ]]; then
+        echo -e "${GREEN}🏠 Personal laptop detected!${RESET}"
+        echo -e "${CYAN}💡 Enhanced automation features are available${RESET}"
+        echo
+
+        echo -e "${WHITE}Would you like to enable smart automation? ${DIM}(Optional)${RESET}"
+        echo -e "  ${YELLOW}🔄 Auto-cleaning:${RESET} Automatically clean cache files"
+        echo -e "  ${YELLOW}🔔 Notifications:${RESET} Alert when disk space is low"
+        echo
+
+        # Auto-cleaning setup
+        while true; do
+            read -p "Setup automatic cache cleaning? [y/N]: " yn
+            case $yn in
+                [Yy]*)
+                    echo -e "${CYAN}Setting up auto-cleaning...${RESET}"
+
+                    cat > "$HOME/.42bleachclean_auto.sh" << 'EOF'
+#!/bin/bash
+# 42BleachClean Auto-Cleaner - Safe cache cleaning only
+LOG_FILE="$HOME/.42bleachclean_auto.log"
+DATE=$(date '+%Y-%m-%d %H:%M:%S')
+echo "[$DATE] Auto-cleanup started..." >> "$LOG_FILE"
+
+# Safe targets only
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    rm -rf "$HOME/Library/Caches/*" 2>/dev/null
+    rm -rf "$HOME/.Trash/*" 2>/dev/null
+else
+    rm -rf "$HOME/.cache/*" 2>/dev/null
+    rm -rf "$HOME/.local/share/Trash/*" 2>/dev/null
+fi
+rm -rf "$HOME/.zcompdump*" 2>/dev/null
+
+echo "[$DATE] Auto-cleanup completed" >> "$LOG_FILE"
+EOF
+                    chmod +x "$HOME/.42bleachclean_auto.sh"
+
+                    # Add weekly cron safe defalt
+                    (crontab -l 2>/dev/null | grep -v "42bleachclean"; echo "0 3 * * 0 $HOME/.42bleachclean_auto.sh") | crontab -
+
+                    echo -e "${GREEN}✅ Weekly auto-cleaning enabled${RESET}"
+                    echo -e "${DIM}   Use 'bleachclean --setup-auto' to customize frequency${RESET}"
+                    break
+                    ;;
+                [Nn]*|"")
+                    echo -e "${BLUE}⏭️  Auto-cleaning skipped${RESET}"
+                    break
+                    ;;
+                *)
+                    echo -e "${RED}Please answer yes (y) or no (n)${RESET}"
+                    ;;
+            esac
+        done
+
+        echo
+
+        # Notificationsetup
+        while true; do
+            read -p "Enable low disk space notifications? [y/N]: " yn
+            case $yn in
+                [Yy]*)
+                    cat > "$HOME/.42bleachclean_notify.sh" << 'EOF'
+#!/bin/bash
+# Check disk space and notify if low
+available_kb=$(df "$HOME" | tail -1 | awk '{print $4}')
+available_mb=$((available_kb / 1024))
+
+if [[ $available_mb -lt 500 ]]; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        osascript -e "display notification \"Low disk space: ${available_mb}MB left. Run bleachclean!\" with title \"42BleachClean\""
+    elif command -v notify-send &> /dev/null; then
+        notify-send "42BleachClean" "Low disk space: ${available_mb}MB left. Run bleachclean!"
+    fi
+fi
+EOF
+                    chmod +x "$HOME/.42bleachclean_notify.sh"
+
+                    #4h
+                    (crontab -l 2>/dev/null | grep -v "42bleachclean_notify"; echo "0 */4 * * * $HOME/.42bleachclean_notify.sh") | crontab -
+
+                    echo -e "${GREEN}✅ Low disk space notifications enabled${RESET}"
+                    echo -e "${DIM}   Will notify when less than 500MB available${RESET}"
+                    break
+                    ;;
+                [Nn]*|"")
+                    echo -e "${BLUE}⏭️  Notifications skipped${RESET}"
+                    break
+                    ;;
+                *)
+                    echo -e "${RED}Please answer yes (y) or no (n)${RESET}"
+                    ;;
+            esac
+        done
+
+    else
+        echo -e "${BLUE}🏫 School/shared computer detected${RESET}"
+        echo -e "${DIM}   Automation features are disabled for safety on shared systems${RESET}"
+        echo -e "${YELLOW}💡 You can still use all manual cleaning features!${RESET}"
+    fi
+
+    echo
+}
+
+
 main() {
     show_install_header
     sleep 1
-    
+
     check_requirements
     sleep 1
-    
+
     confirm_installation
     echo
-    
+
     install_bleachclean
     echo
-    
+
+    # NEW: feartuers 
+    setup_automation_on_install
     show_completion
 }
 
-# Handle interruptions
+
+
 trap 'echo -e "\n${YELLOW}⚠️  Installation interrupted by user${RESET}"; exit 130' INT
 
-# Run installer
 main "$@"
 
   
