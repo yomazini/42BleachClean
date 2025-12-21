@@ -279,30 +279,61 @@ clean_system() {
         "$HOME/Library/Application Support/BraveSoftware/Brave-Browser/*/Service Worker/CacheStorage/*"
         "$HOME/Library/Application Support/BraveSoftware/Brave-Browser/*/Application Cache/*"
     )
-    
-    declare -a clean_targets_linux=(
-        "$HOME/.var/app/com.discordapp.Discord/config/discord/Cache/*"
-        "$HOME/.var/app/com.google.Chrome/config/google-chrome/*/Service Worker/ScriptCache/*"
-        "$HOME/.var/app/com.google.Chrome/config/google-chrome/*/Service Worker/CacheStorage/*"
-        "$HOME/.var/app/org.mozilla.firefox/cache/*"
-        "$HOME/.var/app/com.spotify.Client/cache/*"
-        "$HOME/.var/app/com.visualstudio.code/config/Code/Cache/*"
-        "$HOME/.var/app/*/cache/*"
-        "$HOME/.var/app/com.visualstudio.code/config/Code/CachedData/*"
-        "$HOME/.var/app/com.visualstudio.code/config/Code/CachedExtensionVSIXs/*"
-        "$HOME/.cache/*"
+#safer for nvim cachee
+ declare -a clean_targets_linux=(
+    "$HOME/.local/share/Trash/*"
+
+    "$HOME/.var/app/com.discordapp.Discord/config/discord/Cache/*"
+    "$HOME/.var/app/com.discordapp.Discord/cache/*"
+    "$HOME/.var/app/com.spotify.Client/cache/*"
+
+    "$HOME/.var/app/org.mozilla.firefox/cache/*"
+    "$HOME/.var/app/com.google.Chrome/cache/*"
+    "$HOME/.var/app/com.google.Chrome/config/google-chrome/*/Service Worker/ScriptCache/*"
+    "$HOME/.var/app/com.google.Chrome/config/google-chrome/*/Service Worker/CacheStorage/*"
+    "$HOME/.var/app/com.google.Chrome/config/google-chrome/*/File System/*"
+    "$HOME/.var/app/com.google.Chrome/config/google-chrome/extensions_crx_cache/*"
+    "$HOME/.var/app/com.google.Chrome/config/google-chrome/component_crx_cache/*"
+
+    # --- CODE EDITORS (VS Code Only - Neovim Safe here if you working with vscod commnt them ) ---
+    "$HOME/.var/app/com.visualstudio.code/cache/*"
+    "$HOME/.var/app/com.visualstudio.code/config/Code/Cache/*"
+    "$HOME/.var/app/com.visualstudio.code/config/Code/CachedData/*"
+    "$HOME/.var/app/com.visualstudio.code/config/Code/CachedExtensionVSIXs/*"
+
+    "$HOME/.cache/thumbnails/*"
+
+    "$HOME/.npm/_cacache/*"
+    "$HOME/.bun/install/cache/*"
+    "$HOME/.cache/pip/http/*"
+    "$HOME/.cache/yarn/*"
+  )
+
+# if nt using nvim this is better 
+	
+#    declare -a clean_targets_linux=(
+ #       "$HOME/.var/app/com.discordapp.Discord/config/discord/Cache/*"
+  #      "$HOME/.var/app/com.google.Chrome/config/google-chrome/*/Service Worker/ScriptCache/*"
+   #     "$HOME/.var/app/com.google.Chrome/config/google-chrome/*/Service Worker/CacheStorage/*"
+    #    "$HOME/.var/app/org.mozilla.firefox/cache/*"
+#        "$HOME/.var/app/com.spotify.Client/cache/*"
+ #       "$HOME/.var/app/com.visualstudio.code/config/Code/Cache/*"
+  #      "$HOME/.var/app/*/cache/*"
+   #     "$HOME/.var/app/com.visualstudio.code/config/Code/CachedData/*"
+    #    "$HOME/.var/app/com.visualstudio.code/config/Code/CachedExtensionVSIXs/*"
+     #   "$HOME/.cache/*"
 		#"ymazini/.localshit/bin/shitty_devops_scripts/Cch/*"
-        "$HOME/.var/app/com.discordapp.Discord/cache/*"
-        "$HOME/.var/app/com.google.Chrome/config/google-chrome/*/File System/*"
+#        "$HOME/.var/app/com.discordapp.Discord/cache/*"
+ #       "$HOME/.var/app/com.google.Chrome/config/google-chrome/*/File System/*"
 		 #"ymazini/.localshit/bin/serp/logs/*"
-        "$HOME/.bun/install/cache/*"
-        "$HOME/.var/app/com.google.Chrome/cache/*"
-        "$HOME/.npm/_cacache/*"	
+  #      "$HOME/.bun/install/cache/*"
+   #     "$HOME/.var/app/com.google.Chrome/cache/*"
+    #    "$HOME/.npm/_cacache/*"	
 		 #"ymazini/.localshit/bin/iptv/logs/*"
-        "$HOME/.local/share/Trash/*"
-        "$HOME/.var/app/com.google.Chrome/config/google-chrome/extensions_crx_cache/*"
-        "$HOME/.var/app/com.google.Chrome/config/google-chrome/component_crx_cache/*"
-        "$HOME/.var/app/com.visualstudio.code/cache/*"
+     #   "$HOME/.local/share/Trash/*"
+      #  "$HOME/.var/app/com.google.Chrome/config/google-chrome/extensions_crx_cache/*"
+       # "$HOME/.var/app/com.google.Chrome/config/google-chrome/component_crx_cache/*"
+       # "$HOME/.var/app/com.visualstudio.code/cache/*"
     )
     
     if [[ "$OS" == "macOS" ]]; then
